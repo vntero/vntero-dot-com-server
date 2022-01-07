@@ -1,60 +1,50 @@
+// -------------------------------- REQUIREMENTS ---------------------------------
 const express = require('express')
 const app = express()
 const port = 5005
 
-// ---------------------------------- MOONGOOSE -------------------------------------
-// 0. Require mongoose
 const mongoose = require('mongoose');
 
-main().catch(err => console.log(err));
+const bodyParser = require('body-parser'); 
 
-  // 1. Define your schema
-  let MessageSchema = new mongoose.Schema ({
+// ---------------------------------- MOONGOOSE -------------------------------------
+// 0. connect to our database, mongodb
+mongoose.connect('mongodb://127.0.0.1:27017/Messages');
+
+// 1. Define your schema
+let MessageSchema = new mongoose.Schema ({
     name: String,
     email: String,
     message: String
 })
 
 // 2. Define your model
-    let MessageModel = mongoose.model ('MessageModel', MessageSchema)
+let MessageModel = mongoose.model ('MessageModel', MessageSchema)
 
-    const testMessage = new MessageModel ({
-    name: 'Hugo',
-    email: 'hugo@hugo.com',
-    message: 'Bitcoin is freedom'
-    })
-    console.log(testMessage)
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ END OF MOONGOOSE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/Messages');
-
-// 3. Save the model to MongoDB
-    await testMessage.save();
-
-}
-
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ END OF MOONGOOSE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
-
+// ----------------------------------- EXPRESS ------------------------------------
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.get('/test', (req, res) => {
-    res.send(MessageModel)
+    res.send('Back-end is up and running! This is the root directory.')
   })
 
-app.get('/api/messages', (req, res) => {
-    const messages = [
-        {id: 1, title: 'first message'},
-        {id: 2, title: 'second message'},
-        {id: 3, title: 'third message'}
-    ]
-
-    res.json(messages)
-
+app.get('/message', (req, res) => {
+    res.sendFile(__dirname + '/index.html')
 })
 
+app.post('/message', (req, res) => {
+    let messageOne = new MessageModel({
+        name: req.body.Name,
+        email: req.body.Email,
+        message: req.body.Message
+    })
+    messageOne.save()
+    res.redirect('/')
+})
+    
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`)
+    console.log(`SERVER RUNNING at http://localhost:${port}`)
 })
+
