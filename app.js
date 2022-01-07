@@ -8,11 +8,8 @@ const mongoose = require('mongoose');
 
 main().catch(err => console.log(err));
 
-async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/Messages');
-
   // 1. Define your schema
-    let MessageSchema = new mongoose.Schema ({
+  let MessageSchema = new mongoose.Schema ({
     name: String,
     email: String,
     message: String
@@ -28,23 +25,23 @@ async function main() {
     })
     console.log(testMessage)
 
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/Messages');
+
 // 3. Save the model to MongoDB
     await testMessage.save();
+
 }
+
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ END OF MOONGOOSE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
 app.get('/test', (req, res) => {
-    
-    const firstMessage = new Message ({
-        name: 'Hugo',
-        email: 'hugo@hugo.com',
-        message: 'Is this real life?'
-    })
-    console.log(firstMessage);
+    res.send(MessageModel)
   })
 
 app.get('/api/messages', (req, res) => {
