@@ -3,35 +3,19 @@ const express = require('express')
 const app = express()
 const port = 5005
 const cors = require("cors");
+const router = express.Router()
 
 const mongoose = require('mongoose');
 
-const bodyParser = require('body-parser'); 
+const bodyParser = require('body-parser');
 
-// ---------------------------- Middleware configuration ----------------------------
-module.exports = (app) => {
-    // Because this is a server that will accept requests from outside and it will be hosted ona server with a `proxy`, express needs to know that it should trust that setting.
-    // Services like heroku use something called a proxy and you need to add this to your server
-    app.set("trust proxy", 1);
-  
-    // controls a very specific header to pass headers from the frontend
-    app.use(
-      cors({
-        credentials: true,
-        origin: process.env.ORIGIN || "http://localhost:3000",
-      })
-    );
-  
-    // In development environment the app logs
-    app.use(logger("dev"));
-  
-    // To have access to `body` property in the request
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: false }));
-    app.use(cookieParser());
-  
-    // Handles access to the favicon
-  };
+// ------------------------------------ CORS ----------------------------------------
+app.use(
+    cors({
+      credentials: true,
+      origin: process.env.ORIGIN || "http://localhost:3000",
+    })
+  );
 
 // ---------------------------------- MOONGOOSE -------------------------------------
         // 0. connect to our database, mongodb
@@ -47,7 +31,6 @@ let MessageSchema = new mongoose.Schema ({
         // 2. Define your model
 let MessageModel = mongoose.model ('MessageModel', MessageSchema)
 
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ END OF MOONGOOSE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 
 // ----------------------------------- EXPRESS ------------------------------------
 app.use(bodyParser.urlencoded({extended: false}));
@@ -57,6 +40,7 @@ app.get('/', (req, res) => {
     res.send('Back-end is up and running! This is the root directory.')
   })
 
+// --------------------------------------- BACKEND TESTING ROUTES ------------------------------------------------------
         // this is simply another directory (one where we'll handle our form by grabbing the html file)
 app.get('/message', (req, res) => {
     res.sendFile(__dirname + '/index.html')
@@ -64,12 +48,29 @@ app.get('/message', (req, res) => {
         // GRAB the form submission into the variable, POST it to our DB and redirect to the home page
 app.post('/message', (req, res) => {
     let messageOne = new MessageModel({
-        name: req.body.Name,
-        email: req.body.Email,
-        message: req.body.Message
+        name: req.body.name,
+        email: req.body.email,
+        message: req.body.message
     })
     messageOne.save()
-    res.redirect('/')
+    res.send('Successfully saved in our DB!')
+})
+// ---------------- BACKEND TESTING ROUTES WORK SMOOTHLY, ROUTES LOAD AND CREATE ENTRIES IN THE DB ------------------------------
+
+// will handle all POST requests to http:localhost:5005/new-message
+app.post('/new-message', (req, res) => {  
+    const {name, email, message} = req.body;
+    
+    MessageModel.create({name, email, message})
+          .then((response) => {
+               res.status(200).json(response)
+          })
+          .catch((err) => {
+               res.status(500).json({
+                    error: 'Something went wrong',
+                    message: err
+               })
+          }) 
 })
     
 app.listen(port, () => {
