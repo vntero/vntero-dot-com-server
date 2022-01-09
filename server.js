@@ -33,6 +33,7 @@ let MessageModel = mongoose.model ('MessageModel', MessageSchema)
 
 
 // ----------------------------------- EXPRESS ------------------------------------
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
         // this is the home page - root directory
