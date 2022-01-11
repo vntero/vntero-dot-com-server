@@ -1,7 +1,7 @@
 // -------------------------------- REQUIREMENTS ---------------------------------
 const express = require('express')
 const app = express()
-const port = 5005
+const port = 'Atlas'
 const cors = require("cors");
 const router = express.Router()
 
@@ -19,7 +19,7 @@ app.use(
 
 // ---------------------------------- MOONGOOSE -------------------------------------
         // 0. connect to our database, mongodb
-mongoose.connect('mongodb://127.0.0.1:27017/Messages');
+mongoose.connect('mongodb+srv://hugo:vntero@cluster0.ysxz6.mongodb.net/vntero-dot-com');
 
         // 1. Define your schema
 let MessageSchema = new mongoose.Schema ({
