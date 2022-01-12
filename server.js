@@ -15,9 +15,7 @@ const bodyParser = require('body-parser');
 
 const MONGODB_URI = process.env.MONGODB_URI
 
-
-
-// ------------------------------------ CORS ----------------------------------------
+// ------------------------------------- CORS ----------------------------------------
 app.use(
     cors({
       credentials: true,
@@ -42,6 +40,10 @@ let MessageModel = mongoose.model ('MessageModel', MessageSchema)
 
 
 // ----------------------------------- EXPRESS ------------------------------------
+        // the following 2 lines of code are part of deployment on heroku
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'build')));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -82,6 +84,13 @@ app.post('/new-message', (req, res) => {
                })
           }) 
 })
+
+        // the following lines of code are part of deployment on heroku
+app.use((req, res, next) => {
+	// If no routes match, send them the React HTML.
+	res.sendFile(__dirname + "/build/index.html");
+});
+
     
 app.listen(port, () => {
     console.log(`SERVER RUNNING at http://localhost:${port}`)
