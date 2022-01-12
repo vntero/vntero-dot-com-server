@@ -1,13 +1,21 @@
 // -------------------------------- REQUIREMENTS ---------------------------------
+        // ℹ️ Gets access to environment variables/settings
+        // https://www.npmjs.com/package/dotenv
+require("dotenv/config");
+
 const express = require('express')
 const app = express()
-const port = 'Atlas'
+const port = 5005
 const cors = require("cors");
 const router = express.Router()
 
 const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
+
+const MONGODB_URI = process.env.MONGODB_URI
+
+
 
 // ------------------------------------ CORS ----------------------------------------
 app.use(
@@ -19,8 +27,9 @@ app.use(
 
 // ---------------------------------- MOONGOOSE -------------------------------------
         // 0. connect to our database, mongodb
-mongoose.connect('mongodb+srv://hugo:vntero@cluster0.ysxz6.mongodb.net/vntero-dot-com');
-
+        // LOCALHOST CONNECTION: ------> mongoose.connect('mongodb://127.0.0.1:27017/Messages');
+mongoose.connect(MONGODB_URI);
+        
         // 1. Define your schema
 let MessageSchema = new mongoose.Schema ({
     name: String,
