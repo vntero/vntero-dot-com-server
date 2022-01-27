@@ -7,18 +7,25 @@
     <title>Message form</title>
 </head>
 <body>
-    <h1>Posting info from this form to MongoDB</h1>
-    <form id="message-form" action="/message" method="post">
-        <input name="name" type="text"><br>
-        <label for=""> </label><br>
+    <div>
+        <h1>O formulário abaixo vai criar uma entrada nova na nossa base de dados:</h1>
+        <form id="message-form" action="/message" method="post">
+            <input name="name" type="text" placeholder='What is your name?'><br>
+            <label for=""> </label><br>
+        
+            <input name="email" type="email" placeholder='Email address'><br>
+            <label for=""> </label><br>
+
+            <textarea name="message" placeholder='Type a nice message :)'></textarea><br>
+            <label for=""> </label><br>
+
+            <button type="submit" form="message-form" value="Submit">Add to our database!</button>
+        </form>
+    </div>
+
+    <div>
+        <h1>Aqui devem aparecer todas as mensagens que estão na base de dados:</h1>
+    </div>
     
-        <input name="email" type="email"  id=""><br>
-        <label for=""> </label><br>
-
-        <textarea name="message"></textarea><br>
-        <label for=""> </label><br>
-
-        <button type="submit" form="message-form" value="Submit">Add to our database!</button>
-    </form>
 </body>
 </html>

@@ -54,11 +54,11 @@ app.get('/', (req, res) => {
 
 // --------------------------------------- BACKEND TESTING ROUTES ------------------------------------------------------
         // this is simply another directory (one where we'll handle our form by grabbing the html file)
-app.get('/message', (req, res) => {
+app.get('/d4l', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 })
         // GRAB the form submission into the variable, POST it to our DB and redirect to the home page
-app.post('/message', (req, res) => {
+app.post('/d4l', (req, res) => {
     let messageOne = new MessageModel({
         name: req.body.name,
         email: req.body.email,
