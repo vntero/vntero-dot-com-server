@@ -5,6 +5,7 @@ require("dotenv/config");
 
 const express = require('express')
 const app = express()
+
 const PORT = process.env.PORT || 5005;
 const cors = require("cors");
 const router = express.Router()
@@ -14,6 +15,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const MONGODB_URI = process.env.MONGODB_URI
+
+const db = mongoose.connection
+
+db.on('error', (error) => console.error(error))
+db.once('open', () => console.log('Connected to database'))
 
 // ------------------------------------- CORS ----------------------------------------
 app.use(
@@ -73,12 +79,6 @@ app.post('/d4l', (req, res) => {
 
 app.get('/retriever', (req, res) => {
         res.send('Here we shall see all messages saved in our db:')
-        mongoose.connect(MONGODB_URI, function(err, db) {
-                let existingMessage = db.collection('messagemodels').find();
-                res.send(existingMessage)
-        })
-
-        
         
 })
 
