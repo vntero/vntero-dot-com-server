@@ -6,6 +6,3 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
-
-# VS Code colour configurations
-.vscode
