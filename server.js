@@ -100,13 +100,6 @@ app.post('/new-message', (req, res) => {
           }) 
 })
 
-        // the following lines of code are part of deployment on heroku
-app.use((req, res, next) => {
-	// If no routes match, send them the React HTML.
-	res.sendFile(__dirname + "/build/index.html");
-});
-
-    
 app.listen(PORT, () => {
     console.log(`SERVER RUNNING at http://localhost:${PORT}`)
 })
