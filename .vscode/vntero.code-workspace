@@ -10,5 +10,10 @@
       "node_modules/": true,
       "apps/": true
     },
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#701506",
+    "titleBar.activeBackground": "#701506",
+    "titleBar.activeForeground": "#F5FCFA"
+    },
   }
 }
