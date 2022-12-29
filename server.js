@@ -25,7 +25,7 @@ db.once('open', () => console.log('Connected to database'))
 app.use(
     cors({
       credentials: true,
-      origin: process.env.ORIGIN || "http://localhost:3000",
+      origin: process.env.ORIGIN,
     })
   );
 
@@ -46,11 +46,6 @@ let MessageModel = mongoose.model ('MessageModel', MessageSchema)
 
 
 // ----------------------------------- EXPRESS ------------------------------------
-        // the following 2 lines of code are part of deployment on heroku
-const path = require('path');
-const { assert } = require("console");
-app.use(express.static(path.join(__dirname, 'build')));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
