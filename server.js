@@ -34,10 +34,10 @@ app.use(
         // LOCALHOST CONNECTION: ------> mongoose.connect('mongodb://127.0.0.1:27017/Messages');
 mongoose.connect(MONGODB_URI);
         
-        // 1. Define your schema
+        // 1. Define your schema 
 let MessageSchema = new mongoose.Schema ({
     name: String,
-    email: String,
+    email: String, 
     message: String
 })
 

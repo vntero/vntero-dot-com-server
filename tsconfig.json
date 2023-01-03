@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es2019",
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowUnreachableCode": false,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "rootDir": "src",
+    "typeRoots": [
+      "node_modules/@types",
+      "types/**/*.d.ts",
+    ],
+    "paths": {},
+    "types": ["jest"]
+  },
+  "include": [
+    "src/**/**.ts",
+    "src/**/**.json",
+    "types"
+  ],
+  "exclude": [
+    "node_modules",
+    "apps"
+  ]
+}
