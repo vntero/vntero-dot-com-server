@@ -2,12 +2,12 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
-    // "[javascript]": {
-    //   "editor.formatOnSave": true
-    // },
-    // "[typescript]": {
-    //   "editor.formatOnSave": true
-    // },
+    "[javascript]": {
+      "editor.formatOnSave": true
+    },
+    "[typescript]": {
+      "editor.formatOnSave": true
+    },
     "[json]": {
       "editor.formatOnSave": true
     },
