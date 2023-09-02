@@ -13,8 +13,8 @@ const transporter = nodemailer.createTransport({
 const mailOptions = {
   from: 'derrick97@ethereal.email',
   to: 'derrick97@ethereal.email',
-  subject: 'Hello from Nodemailer',
-  text: 'This is a test email sent from Nodemailer.',
+  subject: 'Someone is trying to reach out to you.',
+  text: 'You have got mail.',
   html: html,
   attachments: [],
 }
