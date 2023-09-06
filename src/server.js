@@ -81,6 +81,7 @@ app.get('/retriever', (req, res) => {
 
 // will handle all POST requests to http:localhost:5005/new-message
 app.post('/new-message', (req, res) => {
+  console.log(req.body)
   const { name, email, message } = req.body;
 
   MessageModel.create({ name, email, message })
