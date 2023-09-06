@@ -1,47 +1,25 @@
 const nodemailer = require('nodemailer')
-
-const html = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <title>Email document - Order is Ready</title>
-  <style>
-    @media screen and (max-width: 480px) {
-      .card {
-          width: 70%;
-      }
-      .details-title {
-          min-width: 100%;
-      }
-    }
-  </style>
-</head>
-<body style="background-color: #F9F9FB; font-family: Trebuchet MS;">
-
-</body>
-</html>
-`
+require("dotenv/config");
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
+  host: 'smtp.mail.me.com',
   port: 587,
-  secure: false,
+  secure: true,
   auth: {
-    user: 'derrick97@ethereal.email',
-    pass: 'K5wNEe7fqusrrAXAmD',
+    user: process.env.ICLOUD,
+    pass: process.env.PW,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 })
 
 const mailOptions = {
-  from: 'derrick97@ethereal.email',
-  to: 'derrick97@ethereal.email',
-  subject: 'Someone is trying to reach out to you.',
-  text: 'You have got mail.',
-  html: html,
+  from: process.env.ICLOUD,
+  to: process.env.GMAIL,
+  subject: 'You have a new message!',
+  text: 'Hello World!',
+  html: 'Hakuna Matata',
   attachments: [],
 }
 

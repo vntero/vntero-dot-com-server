@@ -96,29 +96,16 @@ app.post('/new-message', (req, res) => {
     })
 })
 
-app.listen(PORT, () => {
-  console.log(`SERVER RUNNING at http://localhost:${PORT}`)
-})
-
 // ---------------- SENDS AN EMAIL ----------------
 
 // will handle all POST requests to http:localhost:5005/new-message
-app.post('/new-message', (req, res) => {
-  console.log(req.body)
-  const { name, email, message } = req.body;
+app.post('/new-email', (req, res) => {
+  const { name, email, message } = req.body
 
-  MessageModel.create({ name, email, message })
-    .then((response) => {
-      res.status(200).json(response)
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: 'Something went wrong',
-        message: err
-      })
-    })
+  
 })
 
+// ---------------- LISTENER ----------------
 app.listen(PORT, () => {
   console.log(`SERVER RUNNING at http://localhost:${PORT}`)
 })
