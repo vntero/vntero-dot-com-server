@@ -1,4 +1,4 @@
-// -------------------------------- REQUIREMENTS ---------------------------------
+// ---------------- REQUIREMENTS ----------------
 // ℹ️ Gets access to environment variables/settings
 // https://www.npmjs.com/package/dotenv
 require("dotenv/config");
@@ -21,7 +21,7 @@ const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to database'))
 
-// ------------------------------------- CORS ----------------------------------------
+// ---------------- CORS ----------------
 app.use(
   cors({
     credentials: true,
@@ -29,7 +29,7 @@ app.use(
   })
 );
 
-// ---------------------------------- MOONGOOSE -------------------------------------
+// ---------------- MOONGOOSE ----------------
 // 0. connect to our database, mongodb
 // LOCALHOST CONNECTION: ------> mongoose.connect('mongodb://127.0.0.1:27017/Messages');
 mongoose.connect(MONGODB_URI);
@@ -45,7 +45,7 @@ let MessageSchema = new mongoose.Schema({
 let MessageModel = mongoose.model('MessageModel', MessageSchema)
 
 
-// ----------------------------------- EXPRESS ------------------------------------
+// ---------------- EXPRESS ----------------
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
   res.send('Back-end is up and running! This is the root directory.')
 })
 
-// --------------------------------------- BACKEND TESTING ROUTES ------------------------------------------------------
+// ---------------- BACKEND TESTING ROUTES ----------------
 // this is simply another directory (one where we'll handle our form by grabbing the html file)
 app.get('/d4l', (req, res) => {
   res.sendFile(__dirname + '/index.html')
@@ -70,14 +70,14 @@ app.post('/d4l', (req, res) => {
   res.send('Successfully saved in our DB!')
 })
 
-// --------------------------------------- RETRIEVE ALL MESSAGES SAVED IN OUR DB ------------------------------------------------
+// ---------------- RETRIEVE ALL MESSAGES SAVED IN OUR DB ----------------
 
 app.get('/retriever', (req, res) => {
   res.send('Here we shall see all messages saved in our db:')
 
 })
 
-// ---------------- BACKEND TESTING ROUTES WORK SMOOTHLY, ROUTES LOAD AND CREATE ENTRIES IN THE DB ------------------------------
+// ---------------- CREATES AN ENTRY IN THE DB ----------------
 
 // will handle all POST requests to http:localhost:5005/new-message
 app.post('/new-message', (req, res) => {
@@ -100,3 +100,25 @@ app.listen(PORT, () => {
   console.log(`SERVER RUNNING at http://localhost:${PORT}`)
 })
 
+// ---------------- SENDS AN EMAIL ----------------
+
+// will handle all POST requests to http:localhost:5005/new-message
+app.post('/new-message', (req, res) => {
+  console.log(req.body)
+  const { name, email, message } = req.body;
+
+  MessageModel.create({ name, email, message })
+    .then((response) => {
+      res.status(200).json(response)
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: 'Something went wrong',
+        message: err
+      })
+    })
+})
+
+app.listen(PORT, () => {
+  console.log(`SERVER RUNNING at http://localhost:${PORT}`)
+})
