@@ -52,7 +52,28 @@ app.get('/', (req, res) => {
   res.send('Back-end is up and running! This is the root directory.')
 })
 
-// ---------------- NODEMAILER ----------------
+// ---------------- SAVES FORM IN THE DB ----------------
+app.post('/new-message', (req, res) => {
+  console.log(req.body)
+  const { name, email, message } = req.body;
+
+  MessageModel.create({ name, email, message })
+    .then((response) => {
+      res.status(200).json(response)
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: 'Something went wrong',
+        message: err
+      })
+    })
+})
+
+// ---------------- SENDS FORM AS AN EMAIL ----------------
+app.post('/new-email', (req, res) => {
+  const { name, email, message } = req.body
+
+  // ----- NODEMAILER -----
 const html=`
 <!DOCTYPE html>
 <html>
@@ -108,14 +129,13 @@ const html=`
             <h1>Your Company</h1>
         </div>
         <div class="content">
-            <h2>Hello, ${}</h2>
-            <p>This is a sample email message with a modern and minimalist design. You can customize the content here.</p>
-            <p>Feel free to add more text, images, and links to create your message.</p>
-            <p>Thank you for choosing us!</p>
+            <h2>${name} left you a message!</h2>
+            <p>${email}.</p>
+            <p>${message}</p>
         </div>
         <div class="footer">
-            <p>Copyright &copy; 2023 Your Company</p>
-            <p>Visit our website: <a href="https://www.yourcompany.com">www.yourcompany.com</a></p>
+            <p>Copyright &copy; 2023 @ vntero</p>
+            <p>Visit our website: <a href="https://www.vntero.com">www.vntero.com</a></p>
         </div>
     </div>
 </body>
@@ -152,28 +172,6 @@ transporter.sendMail(mailOptions, (error, info) => {
   }
 })
 
-// ---------------- SAVES FORM IN THE DB ----------------
-app.post('/new-message', (req, res) => {
-  console.log(req.body)
-  const { name, email, message } = req.body;
-
-  MessageModel.create({ name, email, message })
-    .then((response) => {
-      res.status(200).json(response)
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: 'Something went wrong',
-        message: err
-      })
-    })
-})
-
-// ---------------- SENDS FORM AS AN EMAIL ----------------
-app.post('/new-email', (req, res) => {
-  const { name, email, message } = req.body
-
-  
 })
 
 // ---------------- LISTENER ----------------
