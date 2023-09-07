@@ -4,7 +4,7 @@ require("dotenv/config");
 const transporter = nodemailer.createTransport({
   host: 'smtp.mail.me.com',
   port: 587,
-  secure: true,
+  secure: false,
   auth: {
     user: process.env.ICLOUD,
     pass: process.env.PW,
