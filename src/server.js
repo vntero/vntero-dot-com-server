@@ -1,25 +1,17 @@
-// ---------------- REQUIREMENTS ----------------
-// ℹ️ Gets access to environment variables/settings
-// https://www.npmjs.com/package/dotenv
-require("dotenv/config");
+// ---------------- IMPORTS ----------------
+require("dotenv/config")
 
 const express = require('express')
+
 const app = express()
 
-const PORT = process.env.PORT || 5000;
-const cors = require("cors");
-const router = express.Router()
+const cors = require("cors")
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser')
 
-const MONGODB_URI = process.env.MONGODB_URI
-
-const db = mongoose.connection
-
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to database'))
+const nodemailer = require('nodemailer')
 
 // ---------------- CORS ----------------
 app.use(
@@ -29,9 +21,15 @@ app.use(
   })
 );
 
-// ---------------- MOONGOOSE ----------------
+// ---------------- DATABASE ----------------
+const MONGODB_URI = process.env.MONGODB_URI
+const PORT = process.env.PORT || 5000;
+const db = mongoose.connection
+
 // 0. connect to our database, mongodb
-// LOCALHOST CONNECTION: ------> mongoose.connect('mongodb://127.0.0.1:27017/Messages');
+db.on('error', (error) => console.error(error))
+db.once('open', () => console.log('Connected to database'))
+
 mongoose.connect(MONGODB_URI);
 
 // 1. Define your schema 
@@ -54,32 +52,107 @@ app.get('/', (req, res) => {
   res.send('Back-end is up and running! This is the root directory.')
 })
 
-// ---------------- BACKEND TESTING ROUTES ----------------
-// this is simply another directory (one where we'll handle our form by grabbing the html file)
-app.get('/d4l', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
+// ---------------- NODEMAILER ----------------
+const html=`
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Modern Email</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .header {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #888;
+            padding: 20px 0;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Your Company</h1>
+        </div>
+        <div class="content">
+            <h2>Hello, ${}</h2>
+            <p>This is a sample email message with a modern and minimalist design. You can customize the content here.</p>
+            <p>Feel free to add more text, images, and links to create your message.</p>
+            <p>Thank you for choosing us!</p>
+        </div>
+        <div class="footer">
+            <p>Copyright &copy; 2023 Your Company</p>
+            <p>Visit our website: <a href="https://www.yourcompany.com">www.yourcompany.com</a></p>
+        </div>
+    </div>
+</body>
+</html>
+`
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.mail.me.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.ICLOUD,
+    pass: process.env.PW,
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
 })
-// GRAB the form submission into the variable, POST it to our DB and redirect to the home page
-app.post('/d4l', (req, res) => {
-  let messageOne = new MessageModel({
-    name: req.body.name,
-    email: req.body.email,
-    message: req.body.message
-  })
-  messageOne.save()
-  res.send('Successfully saved in our DB!')
+
+const mailOptions = {
+  from: process.env.ICLOUD,
+  to: process.env.GMAIL,
+  subject: 'You have a new message!',
+  text: 'Hello World!',
+  html: html,
+  attachments: [],
+}
+
+transporter.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    console.log('Error occurred:', error.message)
+  } else {
+    console.log('Email sent successfully!', info.messageId)
+  }
 })
 
-// ---------------- RETRIEVE ALL MESSAGES SAVED IN OUR DB ----------------
-
-app.get('/retriever', (req, res) => {
-  res.send('Here we shall see all messages saved in our db:')
-
-})
-
-// ---------------- CREATES AN ENTRY IN THE DB ----------------
-
-// will handle all POST requests to http:localhost:5005/new-message
+// ---------------- SAVES FORM IN THE DB ----------------
 app.post('/new-message', (req, res) => {
   console.log(req.body)
   const { name, email, message } = req.body;
@@ -96,9 +169,7 @@ app.post('/new-message', (req, res) => {
     })
 })
 
-// ---------------- SENDS AN EMAIL ----------------
-
-// will handle all POST requests to http:localhost:5005/new-message
+// ---------------- SENDS FORM AS AN EMAIL ----------------
 app.post('/new-email', (req, res) => {
   const { name, email, message } = req.body
 
